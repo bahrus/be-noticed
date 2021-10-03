@@ -103,16 +103,16 @@ function setProp(self: Element, recipientElement: Element, {valFromEvent, vfe, v
         //const propKeyLispCase = camelToLisp(propKey);
         switch(as){
             case 'str-attr':
-                self.setAttribute(prop, val.toString());
+                recipientElement.setAttribute(prop, val.toString());
                 break;
             case 'obj-attr':
-                self.setAttribute(prop, JSON.stringify(val));
+                recipientElement.setAttribute(prop, JSON.stringify(val));
                 break;
             case 'bool-attr':
                 if(val) {
-                    self.setAttribute(prop, '');
+                    recipientElement.setAttribute(prop, '');
                 }else{
-                    self.removeAttribute(prop);
+                    recipientElement.removeAttribute(prop);
                 }
                 break;
             // default:
@@ -125,7 +125,7 @@ function setProp(self: Element, recipientElement: Element, {valFromEvent, vfe, v
     
         }
     }else{
-        (<any>self)[prop] = val;
+        (<any>recipientElement)[prop] = val;
     }
 }
 

@@ -59,5 +59,7 @@ export interface INotify{
     falseVal?: any;
 
     as?: 'str-attr' | 'bool-attr' | 'obj-attr',
+
+    propName?: string;
     
 }

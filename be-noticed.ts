@@ -37,9 +37,12 @@ const ce = new CE<XtalDecorCore<Element>>({
             }
             for(const propKey in params){
                 const pram = params[propKey];
+                const isPropSet = propKey.endsWith(':onSet');
+                const propName = isPropSet ?  propKey.substr(0, propKey.length - 6) : undefined;
                 const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as (string | INotify)[];
                 for(const notifyParamPre of notifyParams){
                     const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre} : notifyParamPre;
+                    notifyParam.propName = propName;
                     if(notifyParam.doInit){
                         const recipientElement = getRecipientElement(self, notifyParam);
                         if(recipientElement === null){
@@ -48,6 +51,44 @@ const ce = new CE<XtalDecorCore<Element>>({
                         }
                         doAction(self, recipientElement, notifyParam);
                     }
+                }
+                if(propName !== undefined){
+                    let proto = self;
+                    let prop = Object.getOwnPropertyDescriptor(proto, propName);
+                    while (proto && !prop) {
+                        proto = Object.getPrototypeOf(proto);
+                        prop = Object.getOwnPropertyDescriptor(proto, propName);
+                    }
+                    if (prop === undefined) {
+                        console.error({ self, propName, message: "Can't find property." });
+                        continue;
+                    }
+                    const setter = prop.set!.bind(self);
+                    const getter = prop.get!.bind(self);
+                    Object.defineProperty(self, propName, {
+                        get() {
+                            return getter();
+                        },
+                        set(nv) {
+                            setter(nv);
+                            const event = {
+                                target: this
+                            };
+                            const pram = params[propName + ":onSet"];
+                            const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as INotify[];
+                            for(const notifyParamPre of notifyParams){
+                                const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre} : notifyParamPre;
+                                const recipientElement = getRecipientElement(self, notifyParam);
+                                if(recipientElement === null){
+                                    console.warn({msg:'404', notifyParam});
+                                    continue;
+                                }
+                                doAction(self, recipientElement, notifyParam);
+                            }
+                        },
+                        enumerable: true,
+                        configurable: true,
+                    });
                 }
                 self.addEventListener(propKey, e => {
                     const pram = params[e.type];
@@ -95,12 +136,12 @@ function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, toUpSh
 
 //very similar to be-observant.set
 function doAction(self: Element, recipientElement: Element, {
-    valFromEvent, vfe, valFromTarget, vft, clone, parseValAs, trueVal, falseVal, as, prop, fn, toggleProp, plusEq, withArgs
+    valFromEvent, vfe, valFromTarget, vft, clone, parseValAs, trueVal, falseVal, as, prop, fn, toggleProp, plusEq, withArgs, propName
 }: INotify, event?: Event){
     const valFE = vfe || valFromEvent;
     const valFT = vft || valFromTarget;
     if(event === undefined && valFE !== undefined) return;
-    const valPath = (event !== undefined && valFE ? valFE : valFT) || 'value';
+    const valPath = (event !== undefined && valFE ? valFE : valFT) || (propName || 'value');
     const split = splitExt(valPath);
     let src: any = valFE !== undefined ? ( event ? event : self) : self; 
     let val = getProp(src, split, self);
@@ -164,7 +205,7 @@ function getHost(self:Element): HTMLElement{
 }
 
 //copied from pass-up initially
-function doSet(recipientElement: any, prop: string, val: any, plusEq: boolean, toggleProp: boolean){
+function doSet(recipientElement: any, prop: string, val: any, plusEq: boolean | undefined, toggleProp: boolean | undefined){
     if(plusEq){
         recipientElement[prop] += val;
     }else if(toggleProp){

@@ -52,6 +52,20 @@ we have:
 <my-counter></my-counter>
 ```
 
+## Responding to property changes
+
+By default, the keys of the expression, for example "click" is assumed to be an event handler to attach to the element.
+
+However, in many scenarios, we want to respond to property changes that don't emit events.  Signify this by ending the key with ":onSet":
+
+```html
+    <my-fetch-component href="//example.com/api" be-noticed='{
+        "fetchedData:onSet": { "prop": "newData" }
+    }'></my-fetch-component>
+```
+
+This will set the host element's "newData" property to my-fetch-component's fetchedData property.
+
 ## Shortcuts
 
 By default, the "recipient" of the message will be the host custom element containing the decorated element.
@@ -66,7 +80,7 @@ However, alternative recipients can be specified:
      * /my-id searches from outside any ShadowDOM.
      * @attr
      */
-    to?: string;
+    toUpShadow?: string;
 
     /**
      * Pass property or invoke fn onto itself

@@ -79,7 +79,7 @@ const ce = new CE({
                                     console.warn({ msg: '404', notifyParam });
                                     continue;
                                 }
-                                doAction(self, recipientElement, notifyParam);
+                                doAction(self, recipientElement, notifyParam, event);
                             }
                         },
                         enumerable: true,

@@ -83,7 +83,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                                     console.warn({msg:'404', notifyParam});
                                     continue;
                                 }
-                                doAction(self, recipientElement, notifyParam);
+                                doAction(self, recipientElement, notifyParam, event as Event);
                             }
                         },
                         enumerable: true,

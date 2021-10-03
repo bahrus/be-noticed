@@ -52,7 +52,8 @@ const ce = new CE<XtalDecorCore<Element>>({
                 self.addEventListener(propKey, e => {
                     const pram = params[e.type];
                     const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as INotify[];
-                    for(const notifyParam of notifyParams){
+                    for(const notifyParamPre of notifyParams){
+                        const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre} : notifyParamPre;
                         const recipientElement = getRecipientElement(self, notifyParam);
                         if(recipientElement === null){
                             console.warn({msg:'404', notifyParam});

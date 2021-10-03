@@ -48,7 +48,8 @@ const ce = new CE({
                 self.addEventListener(propKey, e => {
                     const pram = params[e.type];
                     const notifyParams = Array.isArray(pram) ? pram : [pram];
-                    for (const notifyParam of notifyParams) {
+                    for (const notifyParamPre of notifyParams) {
+                        const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre } : notifyParamPre;
                         const recipientElement = getRecipientElement(self, notifyParam);
                         if (recipientElement === null) {
                             console.warn({ msg: '404', notifyParam });

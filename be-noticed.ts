@@ -24,7 +24,17 @@ const ce = new CE<XtalDecorCore<Element>>({
         actions:[],
         on:{},
         init: (self: Element, decor: XtalDecorProps<Element>) => {
-            const params = JSON.parse(self.getAttribute('is-' + decor.ifWantsToBe!)!);
+            let params: any = undefined;
+            const attr = self.getAttribute('is-' + decor.ifWantsToBe!)!;
+            try{
+                params = JSON.parse(attr);
+            }catch(e){
+                console.error({
+                    e,
+                    attr
+                });
+                return;
+            }
             for(const propKey in params){
                 const pram = params[propKey];
                 const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as (string | INotify)[];

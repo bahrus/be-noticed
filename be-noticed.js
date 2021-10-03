@@ -19,7 +19,18 @@ const ce = new CE({
         actions: [],
         on: {},
         init: (self, decor) => {
-            const params = JSON.parse(self.getAttribute('is-' + decor.ifWantsToBe));
+            let params = undefined;
+            const attr = self.getAttribute('is-' + decor.ifWantsToBe);
+            try {
+                params = JSON.parse(attr);
+            }
+            catch (e) {
+                console.error({
+                    e,
+                    attr
+                });
+                return;
+            }
             for (const propKey in params) {
                 const pram = params[propKey];
                 const notifyParams = Array.isArray(pram) ? pram : [pram];

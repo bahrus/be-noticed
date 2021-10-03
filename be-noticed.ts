@@ -8,6 +8,7 @@ import {structuralClone} from 'trans-render/lib/structuralClone.js';
 import {upSearch} from 'trans-render/lib/upSearch.js';
 import {upShadowSearch} from 'trans-render/lib/upShadowSearch.js';
 
+
 const ce = new CE<XtalDecorCore<Element>>({
     config:{
         tagName: 'be-noticed',
@@ -26,8 +27,9 @@ const ce = new CE<XtalDecorCore<Element>>({
             const params = JSON.parse(self.getAttribute('is-' + decor.ifWantsToBe!)!);
             for(const propKey in params){
                 const pram = params[propKey];
-                const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as INotify[];
-                for(const notifyParam of notifyParams){
+                const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as (string | INotify)[];
+                for(const notifyParamPre of notifyParams){
+                    const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre} : notifyParamPre;
                     if(notifyParam.doInit){
                         const recipientElement = getRecipientElement(self, notifyParam);
                         if(recipientElement === null){
@@ -59,23 +61,22 @@ const ce = new CE<XtalDecorCore<Element>>({
 });
 
 //very similar to be-observant.getElementToObserve
-function getRecipientElement(self: Element, {toHost, toClosest, toNearestUpMatch, to}: INotify){
+function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, to, toSelf}: INotify){
     let recipientElement: Element | null = (<any>self).recipientElement;
     if(recipientElement) return recipientElement;
-    if(toHost){
-        recipientElement = getHost(self);
-    }else if(to){
+    if(to){
         recipientElement = upShadowSearch(self, to);
-    }
-    else if(toClosest !== undefined){
+    }else if(toClosest !== undefined){
         recipientElement = self.closest(toClosest);
         if(recipientElement !== null && toNearestUpMatch){
             recipientElement = upSearch(recipientElement, toNearestUpMatch) as Element;
         }
     }else if(toNearestUpMatch !== undefined) {
         recipientElement = upSearch(self, toNearestUpMatch) as Element;
+    }else if(toSelf){
+        recipientElement = self;
     }else{
-        throw 'NI'; //not implemented
+        recipientElement = getHost(self); //not implemented
     }
     (<any>self).recipientElement = recipientElement;
     return recipientElement;
@@ -88,7 +89,7 @@ function doAction(self: Element, recipientElement: Element, {
     const valFE = vfe || valFromEvent;
     const valFT = vft || valFromTarget;
     if(event === undefined && valFE !== undefined) return;
-    const valPath = (event !== undefined && valFE ? valFE : valFT) || "value";
+    const valPath = (event !== undefined && valFE ? valFE : valFT) || 'value';
     const split = splitExt(valPath);
     let src: any = valFE !== undefined ? ( event ? event : self) : self; 
     let val = getProp(src, split, self);

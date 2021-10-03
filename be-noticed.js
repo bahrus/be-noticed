@@ -23,7 +23,8 @@ const ce = new CE({
             for (const propKey in params) {
                 const pram = params[propKey];
                 const notifyParams = Array.isArray(pram) ? pram : [pram];
-                for (const notifyParam of notifyParams) {
+                for (const notifyParamPre of notifyParams) {
+                    const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre } : notifyParamPre;
                     if (notifyParam.doInit) {
                         const recipientElement = getRecipientElement(self, notifyParam);
                         if (recipientElement === null) {
@@ -52,14 +53,11 @@ const ce = new CE({
     superclass: XtalDecor,
 });
 //very similar to be-observant.getElementToObserve
-function getRecipientElement(self, { toHost, toClosest, toNearestUpMatch, to }) {
+function getRecipientElement(self, { toClosest, toNearestUpMatch, to, toSelf }) {
     let recipientElement = self.recipientElement;
     if (recipientElement)
         return recipientElement;
-    if (toHost) {
-        recipientElement = getHost(self);
-    }
-    else if (to) {
+    if (to) {
         recipientElement = upShadowSearch(self, to);
     }
     else if (toClosest !== undefined) {
@@ -71,8 +69,11 @@ function getRecipientElement(self, { toHost, toClosest, toNearestUpMatch, to }) 
     else if (toNearestUpMatch !== undefined) {
         recipientElement = upSearch(self, toNearestUpMatch);
     }
+    else if (toSelf) {
+        recipientElement = self;
+    }
     else {
-        throw 'NI'; //not implemented
+        recipientElement = getHost(self); //not implemented
     }
     self.recipientElement = recipientElement;
     return recipientElement;
@@ -83,7 +84,7 @@ function doAction(self, recipientElement, { valFromEvent, vfe, valFromTarget, vf
     const valFT = vft || valFromTarget;
     if (event === undefined && valFE !== undefined)
         return;
-    const valPath = (event !== undefined && valFE ? valFE : valFT) || "value";
+    const valPath = (event !== undefined && valFE ? valFE : valFT) || 'value';
     const split = splitExt(valPath);
     let src = valFE !== undefined ? (event ? event : self) : self;
     let val = getProp(src, split, self);

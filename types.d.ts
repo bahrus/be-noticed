@@ -6,7 +6,7 @@ export interface INotify{
     /**
      * Pass property or invoke fn onto custom or built-in element hosting the contents of p-u element.
      */
-    toHost: boolean;
+    //toHost: boolean;
     /**
      * Id of Dom Element.  Uses import-like syntax:
      * ./my-id searches for #my-id within ShadowDOM realm of pass-up (p-u) instance.
@@ -40,19 +40,19 @@ export interface INotify{
      */
     fn?: string;
 
-    withArgs: ('self' | 'val' | 'event')[];
+    withArgs?: ('self' | 'val' | 'event')[];
 
-    doInit: boolean;
+    doInit?: boolean;
 
-    clone: boolean;
+    clone?: boolean;
 
-    parseValAs: string;
+    parseValAs?: string;
 
-    plusEq: boolean;
+    plusEq?: boolean;
 
-    eqConst: any;
+    eqConst?: any;
 
-    toggleProp: boolean;
+    toggleProp?: boolean;
 
     trueVal?: any;
 

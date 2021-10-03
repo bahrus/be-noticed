@@ -86,8 +86,7 @@ function doAction(self: Element, recipientElement: Element, {
     const valFE = vfe || valFromEvent;
     const valFT = vft || valFromTarget;
     if(event === undefined && valFE !== undefined) return;
-    const valPath = event !== undefined && valFE ? valFE : valFT;
-    if(valPath === undefined) throw 'NI';//not implemented;
+    const valPath = (event !== undefined && valFE ? valFE : valFT) || "value";
     const split = splitExt(valPath);
     let src: any = valFE !== undefined ? ( event ? event : self) : self; 
     let val = getProp(src, split, self);

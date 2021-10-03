@@ -82,9 +82,7 @@ function doAction(self, recipientElement, { valFromEvent, vfe, valFromTarget, vf
     const valFT = vft || valFromTarget;
     if (event === undefined && valFE !== undefined)
         return;
-    const valPath = event !== undefined && valFE ? valFE : valFT;
-    if (valPath === undefined)
-        throw 'NI'; //not implemented;
+    const valPath = (event !== undefined && valFE ? valFE : valFT) || "value";
     const split = splitExt(valPath);
     let src = valFE !== undefined ? (event ? event : self) : self;
     let val = getProp(src, split, self);

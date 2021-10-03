@@ -1,0 +1,156 @@
+import {XtalDecor, XtalDecorCore} from 'xtal-decor/xtal-decor.js';
+import { XtalDecorProps } from 'xtal-decor/types';
+import {CE} from 'trans-render/lib/CE.js';
+import { camelToLisp } from 'trans-render/lib/camelToLisp.js';
+import {INotify} from './types';
+import {convert, getProp, splitExt} from 'on-to-me/prop-mixin.js';
+import {structuralClone} from 'trans-render/lib/structuralClone.js';
+import {upSearch} from 'trans-render/lib/upSearch.js';
+import {upShadowSearch} from 'trans-render/lib/upShadowSearch.js';
+
+const ce = new CE<XtalDecorCore<Element>>({
+    config:{
+        tagName: 'be-noticed',
+        propDefaults:{
+            upgrade: '*',
+            ifWantsToBe: 'noticed',
+            noParse: true,
+            forceVisible: true,
+            virtualProps: ['recipientElement'],
+        }
+    },
+    complexPropDefaults:{
+        actions:[],
+        on:{},
+        init: (self: Element, decor: XtalDecorProps<Element>) => {
+            const params = JSON.parse(self.getAttribute('is-' + decor.ifWantsToBe!)!);
+            for(const propKey in params){
+                const pram = params[propKey];
+                const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as INotify[];
+                for(const notifyParam of notifyParams){
+                    if(notifyParam.doInit){
+                        const recipientElement = getRecipientElement(self, notifyParam);
+                        if(recipientElement === null){
+                            console.warn({msg:'404', notifyParam});
+                            continue;
+                        }
+                        setProp(self, recipientElement, notifyParam);
+                    }
+                }
+                self.addEventListener(propKey, e => {
+                    const pram = params[e.type];
+                    const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as INotify[];
+                    for(const notifyParam of notifyParams){
+                        const recipientElement = getRecipientElement(self, notifyParam);
+                        if(recipientElement === null){
+                            console.warn({msg:'404', notifyParam});
+                            continue;
+                        }
+                        setProp(self, recipientElement, notifyParam);
+                    }
+                })
+                
+            }
+        }
+    },
+    superclass: XtalDecor,
+});
+
+//very similar to be-observant.getElementToObserve
+function getRecipientElement(self: Element, {toHost, toClosest, toNearestUpMatch, to}: INotify){
+    let recipientElement: Element | null = (<any>self).recipientElement;
+    if(recipientElement) return recipientElement;
+    if(toHost){
+        recipientElement = getHost(self);
+    }else if(to){
+        recipientElement = upShadowSearch(self, to);
+    }
+    else if(toClosest !== undefined){
+        recipientElement = self.closest(toClosest);
+        if(recipientElement !== null && toNearestUpMatch){
+            recipientElement = upSearch(recipientElement, toNearestUpMatch) as Element;
+        }
+    }else if(toNearestUpMatch !== undefined) {
+        recipientElement = upSearch(self, toNearestUpMatch) as Element;
+    }else{
+        throw 'NI'; //not implemented
+    }
+    (<any>self).recipientElement = recipientElement;
+    return recipientElement;
+}
+
+//very similar to be-observant.set
+function setProp(self: Element, recipientElement: Element, {valFromEvent, vfe, valFromTarget, vft, clone, parseValAs, trueVal, falseVal, as, prop}: INotify, event?: Event){
+    const valFE = vfe || valFromEvent;
+    const valFT = vft || valFromTarget;
+    if(event === undefined && valFE !== undefined) return;
+    const valPath = event !== undefined && valFE ? valFE : valFT;
+    if(valPath === undefined) throw 'NI';//not implemented;
+    const split = splitExt(valPath);
+    let src: any = valFE !== undefined ? ( event ? event : self) : self; 
+    let val = getProp(src, split, self);
+    if(val === undefined) return;
+    if(clone) val = structuralClone(val);
+    if(parseValAs !== undefined){
+        val = convert(val, parseValAs);
+    }
+    if(trueVal && val){
+        val = trueVal;
+    }else if(falseVal && !val){
+        val = falseVal;
+    }
+    if(as !== undefined){
+        //const propKeyLispCase = camelToLisp(propKey);
+        switch(as){
+            case 'str-attr':
+                self.setAttribute(prop, val.toString());
+                break;
+            case 'obj-attr':
+                self.setAttribute(prop, JSON.stringify(val));
+                break;
+            case 'bool-attr':
+                if(val) {
+                    self.setAttribute(prop, '');
+                }else{
+                    self.removeAttribute(prop);
+                }
+                break;
+            // default:
+            //     if(toProp === '...'){
+            //         Object.assign(subMatch, val);
+            //     }else{
+            //         (<any>subMatch)[toProp] = val;
+            //     }
+                
+    
+        }
+    }else{
+        (<any>self)[prop] = val;
+    }
+}
+
+//duplicated with be-observant
+function getHost(self:Element): HTMLElement{
+    let host = (<any>self.getRootNode()).host;
+    if(host === undefined){
+        host = self.parentElement;
+        while(host && !host.localName.includes('-')){
+            host = host.parentElement;
+        }
+    }
+    return host;
+}
+
+// /**
+// * get previous sibling -- identical to be-observant
+// */
+// function getPreviousSib(self: Element, observe: string) : Element | null{
+//     let prevSib: Element | null = self;
+//     while(prevSib && !prevSib.matches(observe)){
+//         const nextPrevSib: Element | null = prevSib.previousElementSibling || prevSib.parentElement;
+//         prevSib = nextPrevSib;
+//     }
+//     return prevSib;
+//  }
+
+document.head.appendChild(document.createElement('be-noticed'));

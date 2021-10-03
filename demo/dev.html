@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id=testTarget></div>
+    <button data-msg="hello" be-noticed='{
+        "click": {"to": "testTarget", "prop": "textContent", "vft": "dataset.msg"}
+    }'>Click</button>
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "xtal-decor/": "../node_modules/xtal-decor/",
+                "on-to-me/": "../node_modules/on-to-me/"
+            }
+        }
+        </script>
+    <script type=module>
+        import '../be-noticed.js';
+    </script>
+</body>
+</html>

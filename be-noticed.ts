@@ -72,7 +72,7 @@ const ce = new CE<XtalDecorCore<Element>>({
 });
 
 //very similar to be-observant.getElementToObserve
-function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, to, toSelf}: INotify){
+function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, toUpShadow: to, toSelf}: INotify){
     let recipientElement: Element | null = (<any>self).recipientElement;
     if(recipientElement) return recipientElement;
     if(to){

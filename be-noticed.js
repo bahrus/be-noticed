@@ -65,7 +65,7 @@ const ce = new CE({
     superclass: XtalDecor,
 });
 //very similar to be-observant.getElementToObserve
-function getRecipientElement(self, { toClosest, toNearestUpMatch, to, toSelf }) {
+function getRecipientElement(self, { toClosest, toNearestUpMatch, toUpShadow: to, toSelf }) {
     let recipientElement = self.recipientElement;
     if (recipientElement)
         return recipientElement;

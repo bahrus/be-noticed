@@ -9,12 +9,12 @@ export interface INotify{
     //toHost: boolean;
     /**
      * Id of Dom Element.  Uses import-like syntax:
-     * ./my-id searches for #my-id within ShadowDOM realm of pass-up (p-u) instance.
+     * ./my-id searches for #my-id within ShadowDOM realm of  instance.
      * ../my-id searches for #my-id one ShadowDOM level up.
      * /my-id searches from outside any ShadowDOM.
      * @attr
      */
-    to?: string;
+    toUpShadow?: string;
 
     /**
      * Pass property or invoke fn onto itself

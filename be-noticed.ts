@@ -63,8 +63,8 @@ const ce = new CE<XtalDecorCore<Element>>({
                         console.error({ self, propName, message: "Can't find property." });
                         continue;
                     }
-                    const setter = prop.set!.bind(self);
-                    const getter = prop.get!.bind(self);
+                    const setter = prop.set!.bind(target);
+                    const getter = prop.get!.bind(target);
                     Object.defineProperty(target, propName, {
                         get() {
                             return getter();

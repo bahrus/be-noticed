@@ -33,7 +33,7 @@ export interface INotify{
      * Name of property to set on matching (upstream) element.
      * @attr
      */
-    prop: string;
+    prop?: string;
 
     /**
      * Name of method or property arrow function to invoke on matching (upstream) element.

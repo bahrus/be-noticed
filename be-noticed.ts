@@ -34,7 +34,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                             console.warn({msg:'404', notifyParam});
                             continue;
                         }
-                        setProp(self, recipientElement, notifyParam);
+                        doAction(self, recipientElement, notifyParam);
                     }
                 }
                 self.addEventListener(propKey, e => {
@@ -46,7 +46,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                             console.warn({msg:'404', notifyParam});
                             continue;
                         }
-                        setProp(self, recipientElement, notifyParam);
+                        doAction(self, recipientElement, notifyParam);
                     }
                 })
                 
@@ -80,7 +80,9 @@ function getRecipientElement(self: Element, {toHost, toClosest, toNearestUpMatch
 }
 
 //very similar to be-observant.set
-function setProp(self: Element, recipientElement: Element, {valFromEvent, vfe, valFromTarget, vft, clone, parseValAs, trueVal, falseVal, as, prop}: INotify, event?: Event){
+function doAction(self: Element, recipientElement: Element, {
+    valFromEvent, vfe, valFromTarget, vft, clone, parseValAs, trueVal, falseVal, as, prop, fn, toggleProp, plusEq, withArgs
+}: INotify, event?: Event){
     const valFE = vfe || valFromEvent;
     const valFT = vft || valFromTarget;
     if(event === undefined && valFE !== undefined) return;
@@ -125,7 +127,14 @@ function setProp(self: Element, recipientElement: Element, {valFromEvent, vfe, v
     
         }
     }else{
-        (<any>recipientElement)[prop] = val;
+        if(prop !== undefined){
+            doSet(recipientElement, prop, val, plusEq, toggleProp)
+        }else if(fn !== undefined){
+            doInvoke(recipientElement, fn, val, withArgs, event);
+        }else{
+            throw 'NI'; //Not Implemented
+        }
+        
     }
 }
 
@@ -140,6 +149,39 @@ function getHost(self:Element): HTMLElement{
     }
     return host;
 }
+
+//copied from pass-up initially
+function doSet(recipientElement: any, prop: string, val: any, plusEq: boolean, toggleProp: boolean){
+    if(plusEq){
+        recipientElement[prop] += val;
+    }else if(toggleProp){
+        recipientElement[prop] = !recipientElement[prop];
+    }else{
+        recipientElement[prop] = val;
+    }
+    
+}
+
+//copied from pass-up initially
+function doInvoke(match: any, fn: string, val: any, withArgs: string[] | undefined, event?: Event){
+    const args = [];
+    const copyArgs = withArgs || ['self', 'val', 'event'];
+    for(const arg of copyArgs){
+        switch(arg){
+            case 'self':
+                args.push(match);
+                break;
+            case 'val':
+                args.push(val);
+                break;
+            case 'event':
+                args.push(event);
+                break;
+        }
+    }
+    match[fn](...args);
+}
+
 
 // /**
 // * get previous sibling -- identical to be-observant

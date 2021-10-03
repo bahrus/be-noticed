@@ -30,7 +30,7 @@ const ce = new CE({
                             console.warn({ msg: '404', notifyParam });
                             continue;
                         }
-                        setProp(self, recipientElement, notifyParam);
+                        doAction(self, recipientElement, notifyParam);
                     }
                 }
                 self.addEventListener(propKey, e => {
@@ -42,7 +42,7 @@ const ce = new CE({
                             console.warn({ msg: '404', notifyParam });
                             continue;
                         }
-                        setProp(self, recipientElement, notifyParam);
+                        doAction(self, recipientElement, notifyParam);
                     }
                 });
             }
@@ -77,7 +77,7 @@ function getRecipientElement(self, { toHost, toClosest, toNearestUpMatch, to }) 
     return recipientElement;
 }
 //very similar to be-observant.set
-function setProp(self, recipientElement, { valFromEvent, vfe, valFromTarget, vft, clone, parseValAs, trueVal, falseVal, as, prop }, event) {
+function doAction(self, recipientElement, { valFromEvent, vfe, valFromTarget, vft, clone, parseValAs, trueVal, falseVal, as, prop, fn, toggleProp, plusEq, withArgs }, event) {
     const valFE = vfe || valFromEvent;
     const valFT = vft || valFromTarget;
     if (event === undefined && valFE !== undefined)
@@ -127,7 +127,15 @@ function setProp(self, recipientElement, { valFromEvent, vfe, valFromTarget, vft
         }
     }
     else {
-        recipientElement[prop] = val;
+        if (prop !== undefined) {
+            doSet(recipientElement, prop, val, plusEq, toggleProp);
+        }
+        else if (fn !== undefined) {
+            doInvoke(recipientElement, fn, val, withArgs, event);
+        }
+        else {
+            throw 'NI'; //Not Implemented
+        }
     }
 }
 //duplicated with be-observant
@@ -140,6 +148,37 @@ function getHost(self) {
         }
     }
     return host;
+}
+//copied from pass-up initially
+function doSet(recipientElement, prop, val, plusEq, toggleProp) {
+    if (plusEq) {
+        recipientElement[prop] += val;
+    }
+    else if (toggleProp) {
+        recipientElement[prop] = !recipientElement[prop];
+    }
+    else {
+        recipientElement[prop] = val;
+    }
+}
+//copied from pass-up initially
+function doInvoke(match, fn, val, withArgs, event) {
+    const args = [];
+    const copyArgs = withArgs || ['self', 'val', 'event'];
+    for (const arg of copyArgs) {
+        switch (arg) {
+            case 'self':
+                args.push(match);
+                break;
+            case 'val':
+                args.push(val);
+                break;
+            case 'event':
+                args.push(event);
+                break;
+        }
+    }
+    match[fn](...args);
 }
 // /**
 // * get previous sibling -- identical to be-observant

@@ -48,7 +48,9 @@ const ce = new CE<XtalDecorCore<Element>>({
                         }
                         doAction(self, recipientElement, notifyParam);
                     }
-                })
+                    
+                });
+                nudge(self);
                 
             }
         }
@@ -181,6 +183,22 @@ function doInvoke(match: any, fn: string, val: any, withArgs: string[] | undefin
     match[fn](...args);
 }
 
+ /**
+ * Decrement "disabled" counter, remove when reaches 0
+ * @param prevSib 
+ */
+  function nudge(prevSib: Element) { //TODO:  Share with be-observant
+    const da = prevSib.getAttribute('disabled');
+    if (da !== null) {
+        if (da.length === 0 || da === "1") {
+            prevSib.removeAttribute('disabled');
+            (<any>prevSib).disabled = false;
+        }
+        else {
+            prevSib.setAttribute('disabled', (parseInt(da) - 1).toString());
+        }
+    }
+}
 
 // /**
 // * get previous sibling -- identical to be-observant

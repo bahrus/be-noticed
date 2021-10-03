@@ -23,7 +23,7 @@ const ce = new CE<XtalDecorCore<Element>>({
     complexPropDefaults:{
         actions:[],
         on:{},
-        init: (self: Element, decor: XtalDecorProps<Element>) => {
+        init: (self: Element, decor: XtalDecorProps<Element>, target) => {
             let params: any = undefined;
             const attr = self.getAttribute('is-' + decor.ifWantsToBe!)!;
             try{
@@ -53,7 +53,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                     }
                 }
                 if(propName !== undefined){
-                    let proto = self;
+                    let proto = target;
                     let prop = Object.getOwnPropertyDescriptor(proto, propName);
                     while (proto && !prop) {
                         proto = Object.getPrototypeOf(proto);
@@ -65,7 +65,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                     }
                     const setter = prop.set!.bind(self);
                     const getter = prop.get!.bind(self);
-                    Object.defineProperty(self, propName, {
+                    Object.defineProperty(target, propName, {
                         get() {
                             return getter();
                         },

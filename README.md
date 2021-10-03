@@ -40,11 +40,11 @@ we have:
 >
     <template>
         <button part=down data-d=-1 be-noticed='{
-            "click":{ "prop": "count", "plusEq": true, "val": "target.dataset.d", "parseValAs": "int"}
+            "click":{ "prop": "count", "plusEq": true, "vft": "dataset.d", "parseValAs": "int"}
         }'>-</button>
         <span part=count></span>
         <button part=up data-d=1 be-noticed='{
-            "click":{ "toHost": true, "prop": "count", "plusEq": true, "val": "target.dataset.d", "parseValAs": "int"}
+            "click":{ "prop": "count", "plusEq": true, "vft": "dataset.d", "parseValAs": "int"}
         }'>+</button>
         <style></style>            
     </template>

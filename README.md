@@ -2,6 +2,8 @@
 
 be-noticed is a member of the [p-et-alia](https://github.com/bahrus/p-et-alia) family of web components.
 
+[![Actions Status](https://github.com/bahrus/be-noticed/workflows/CI/badge.svg)](https://github.com/bahrus/be-noticed/actions?query=workflow%3ACI)
+
 It strives to accomplish the same thing as the [pass-up](https://github.com/bahrus/pass-up) custom element, but in a possibly more performant way in many circumstances.  It uses attributes rather than elements to bind things together.  So instead of:
 
 ```html

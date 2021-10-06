@@ -17,7 +17,7 @@ const ce = new CE<XtalDecorCore<Element>>({
             ifWantsToBe: 'noticed',
             noParse: true,
             forceVisible: true,
-            virtualProps: ['recipientElement'],
+            virtualProps: ['recipientElement', 'eventHandlers'],
         }
     },
     complexPropDefaults:{
@@ -90,7 +90,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                         configurable: true,
                     });
                 }
-                self.addEventListener(propKey, e => {
+                const fn = (e: Event) => {
                     const pram = params[e.type];
                     const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as INotify[];
                     for(const notifyParamPre of notifyParams){
@@ -102,14 +102,20 @@ const ce = new CE<XtalDecorCore<Element>>({
                         }
                         doAction(self, recipientElement, notifyParam);
                     }
-                    
-                });
+                }
+                self.addEventListener(propKey, fn);
+                if((<any>self).eventHandlers === undefined) (<any>self).eventHandlers = [];
+                (<any>self).eventHandlers.push({propKey, element: self, fn});
                 nudge(self);
                 
             }
         },
         finale: (self: Element, target: Element) => {
-            
+            const eventHandlers = (<any>self).eventHandlers;
+            //console.log(eventHandlers);
+            for(const eh of eventHandlers){
+                eh.element.removeEventListener(eh.propKey, eh.fn);
+            }
         }
     },
     superclass: XtalDecor,

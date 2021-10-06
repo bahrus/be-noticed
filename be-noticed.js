@@ -12,7 +12,7 @@ const ce = new CE({
             ifWantsToBe: 'noticed',
             noParse: true,
             forceVisible: true,
-            virtualProps: ['recipientElement'],
+            virtualProps: ['recipientElement', 'eventHandlers'],
         }
     },
     complexPropDefaults: {
@@ -86,7 +86,7 @@ const ce = new CE({
                         configurable: true,
                     });
                 }
-                self.addEventListener(propKey, e => {
+                const fn = (e) => {
                     const pram = params[e.type];
                     const notifyParams = Array.isArray(pram) ? pram : [pram];
                     for (const notifyParamPre of notifyParams) {
@@ -98,11 +98,20 @@ const ce = new CE({
                         }
                         doAction(self, recipientElement, notifyParam);
                     }
-                });
+                };
+                self.addEventListener(propKey, fn);
+                if (self.eventHandlers === undefined)
+                    self.eventHandlers = [];
+                self.eventHandlers.push({ propKey, element: self, fn });
                 nudge(self);
             }
         },
         finale: (self, target) => {
+            const eventHandlers = self.eventHandlers;
+            //console.log(eventHandlers);
+            for (const eh of eventHandlers) {
+                eh.element.removeEventListener(eh.propKey, eh.fn);
+            }
         }
     },
     superclass: XtalDecor,

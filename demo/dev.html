@@ -9,8 +9,15 @@
 <body>
     <div id=testTarget></div>
     <button data-msg="hello" be-noticed='{
-        "click": {"to": "testTarget", "prop": "textContent", "vft": "dataset.msg"}
+        "click": {"toUpShadow": "testTarget", "prop": "textContent", "vft": "dataset.msg"}
     }'>Click</button>
+
+    <button onclick="removeButton()">Remove Button</button>
+    <script>
+        function removeButton(){
+            document.querySelector('[data-msg]').remove();
+        }
+    </script>
     <script type=importmap>
         {
             "imports": {

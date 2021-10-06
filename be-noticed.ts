@@ -107,6 +107,9 @@ const ce = new CE<XtalDecorCore<Element>>({
                 nudge(self);
                 
             }
+        },
+        finale: (self: Element, target: Element) => {
+            
         }
     },
     superclass: XtalDecor,
@@ -159,16 +162,16 @@ function doAction(self: Element, recipientElement: Element, {
         //const propKeyLispCase = camelToLisp(propKey);
         switch(as){
             case 'str-attr':
-                recipientElement.setAttribute(prop, val.toString());
+                recipientElement.setAttribute(prop!, val.toString());
                 break;
             case 'obj-attr':
-                recipientElement.setAttribute(prop, JSON.stringify(val));
+                recipientElement.setAttribute(prop!, JSON.stringify(val));
                 break;
             case 'bool-attr':
                 if(val) {
-                    recipientElement.setAttribute(prop, '');
+                    recipientElement.setAttribute(prop!, '');
                 }else{
-                    recipientElement.removeAttribute(prop);
+                    recipientElement.removeAttribute(prop!);
                 }
                 break;
             // default:

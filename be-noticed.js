@@ -101,6 +101,8 @@ const ce = new CE({
                 });
                 nudge(self);
             }
+        },
+        finale: (self, target) => {
         }
     },
     superclass: XtalDecor,

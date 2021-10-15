@@ -90,14 +90,15 @@ export class BeNoticedController {
             proxy.addEventListener(propKey, fn);
             if (proxy.eventHandlers === undefined)
                 proxy.eventHandlers = [];
-            proxy.eventHandlers.push({ propKey, element: proxy, fn });
+            const on = propKey;
+            proxy.eventHandlers.push({ on, elementToObserve: proxy, fn });
             nudge(proxy);
         }
     }
     finale(proxy, target) {
         const eventHandlers = proxy.eventHandlers;
         for (const eh of eventHandlers) {
-            eh.element.removeEventListener(eh.propKey, eh.fn);
+            eh.elementToObserve.removeEventListener(eh.on, eh.fn);
         }
     }
 }
@@ -229,7 +230,7 @@ define({
             forceVisible: true,
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['recipientElement', 'eventHandlers']
+            virtualProps: ['eventHandlers']
         }
     },
     complexPropDefaults: {

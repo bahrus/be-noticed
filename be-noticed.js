@@ -1,121 +1,106 @@
-import { XtalDecor } from 'xtal-decor/xtal-decor.js';
-import { CE } from 'trans-render/lib/CE.js';
+import { define } from 'be-decorated/be-decorated.js';
+import { nudge } from 'trans-render/lib/nudge.js';
+import { getHost } from 'trans-render/lib/getHost.js';
 import { convert, getProp, splitExt } from 'on-to-me/prop-mixin.js';
-import { structuralClone } from 'trans-render/lib/structuralClone.js';
 import { upSearch } from 'trans-render/lib/upSearch.js';
 import { upShadowSearch } from 'trans-render/lib/upShadowSearch.js';
-const ce = new CE({
-    config: {
-        tagName: 'be-noticed',
-        propDefaults: {
-            upgrade: '*',
-            ifWantsToBe: 'noticed',
-            noParse: true,
-            forceVisible: true,
-            virtualProps: ['recipientElement', 'eventHandlers'],
+import { structuralClone } from 'trans-render/lib/structuralClone.js';
+export class BeNoticedController {
+    intro(proxy, target, beDecorProps) {
+        let params = undefined;
+        const attr = proxy.getAttribute('is-' + beDecorProps.ifWantsToBe);
+        try {
+            params = JSON.parse(attr);
         }
-    },
-    complexPropDefaults: {
-        actions: [],
-        on: {},
-        init: (self, decor, target) => {
-            let params = undefined;
-            const attr = self.getAttribute('is-' + decor.ifWantsToBe);
-            try {
-                params = JSON.parse(attr);
+        catch (e) {
+            console.error({
+                e,
+                attr
+            });
+            return;
+        }
+        for (const propKey in params) {
+            const pram = params[propKey];
+            const isPropSet = propKey.endsWith(':onSet');
+            const propName = isPropSet ? propKey.substr(0, propKey.length - 6) : undefined;
+            const notifyParams = Array.isArray(pram) ? pram : [pram];
+            for (const notifyParamPre of notifyParams) {
+                const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre } : notifyParamPre;
+                notifyParam.propName = propName;
+                if (notifyParam.doInit) {
+                    const recipientElement = getRecipientElement(proxy, notifyParam);
+                    if (recipientElement === null) {
+                        console.warn({ msg: '404', notifyParam });
+                        continue;
+                    }
+                    doAction(proxy, recipientElement, notifyParam);
+                }
             }
-            catch (e) {
-                console.error({
-                    e,
-                    attr
+            if (propName !== undefined) {
+                let proto = target;
+                let prop = Object.getOwnPropertyDescriptor(proto, propName);
+                while (proto && !prop) {
+                    proto = Object.getPrototypeOf(proto);
+                    prop = Object.getOwnPropertyDescriptor(proto, propName);
+                }
+                if (prop === undefined) {
+                    console.error({ self: proxy, propName, message: "Can't find property." });
+                    continue;
+                }
+                const setter = prop.set.bind(target);
+                const getter = prop.get.bind(target);
+                Object.defineProperty(target, propName, {
+                    get() {
+                        return getter();
+                    },
+                    set(nv) {
+                        setter(nv);
+                        const event = {
+                            target: this
+                        };
+                        const pram = params[propName + ":onSet"];
+                        const notifyParams = Array.isArray(pram) ? pram : [pram];
+                        for (const notifyParamPre of notifyParams) {
+                            const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre } : notifyParamPre;
+                            const recipientElement = getRecipientElement(proxy, notifyParam);
+                            if (recipientElement === null) {
+                                console.warn({ msg: '404', notifyParam });
+                                continue;
+                            }
+                            doAction(proxy, recipientElement, notifyParam, event);
+                        }
+                    },
+                    enumerable: true,
+                    configurable: true,
                 });
-                return;
             }
-            for (const propKey in params) {
-                const pram = params[propKey];
-                const isPropSet = propKey.endsWith(':onSet');
-                const propName = isPropSet ? propKey.substr(0, propKey.length - 6) : undefined;
+            const fn = (e) => {
+                const pram = params[e.type];
                 const notifyParams = Array.isArray(pram) ? pram : [pram];
                 for (const notifyParamPre of notifyParams) {
                     const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre } : notifyParamPre;
-                    notifyParam.propName = propName;
-                    if (notifyParam.doInit) {
-                        const recipientElement = getRecipientElement(self, notifyParam);
-                        if (recipientElement === null) {
-                            console.warn({ msg: '404', notifyParam });
-                            continue;
-                        }
-                        doAction(self, recipientElement, notifyParam);
-                    }
-                }
-                if (propName !== undefined) {
-                    let proto = target;
-                    let prop = Object.getOwnPropertyDescriptor(proto, propName);
-                    while (proto && !prop) {
-                        proto = Object.getPrototypeOf(proto);
-                        prop = Object.getOwnPropertyDescriptor(proto, propName);
-                    }
-                    if (prop === undefined) {
-                        console.error({ self, propName, message: "Can't find property." });
+                    const recipientElement = getRecipientElement(proxy, notifyParam);
+                    if (recipientElement === null) {
+                        console.warn({ msg: '404', notifyParam });
                         continue;
                     }
-                    const setter = prop.set.bind(target);
-                    const getter = prop.get.bind(target);
-                    Object.defineProperty(target, propName, {
-                        get() {
-                            return getter();
-                        },
-                        set(nv) {
-                            setter(nv);
-                            const event = {
-                                target: this
-                            };
-                            const pram = params[propName + ":onSet"];
-                            const notifyParams = Array.isArray(pram) ? pram : [pram];
-                            for (const notifyParamPre of notifyParams) {
-                                const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre } : notifyParamPre;
-                                const recipientElement = getRecipientElement(self, notifyParam);
-                                if (recipientElement === null) {
-                                    console.warn({ msg: '404', notifyParam });
-                                    continue;
-                                }
-                                doAction(self, recipientElement, notifyParam, event);
-                            }
-                        },
-                        enumerable: true,
-                        configurable: true,
-                    });
+                    doAction(proxy, recipientElement, notifyParam);
                 }
-                const fn = (e) => {
-                    const pram = params[e.type];
-                    const notifyParams = Array.isArray(pram) ? pram : [pram];
-                    for (const notifyParamPre of notifyParams) {
-                        const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre } : notifyParamPre;
-                        const recipientElement = getRecipientElement(self, notifyParam);
-                        if (recipientElement === null) {
-                            console.warn({ msg: '404', notifyParam });
-                            continue;
-                        }
-                        doAction(self, recipientElement, notifyParam);
-                    }
-                };
-                self.addEventListener(propKey, fn);
-                if (self.eventHandlers === undefined)
-                    self.eventHandlers = [];
-                self.eventHandlers.push({ propKey, element: self, fn });
-                nudge(self);
-            }
-        },
-        finale: (self, target) => {
-            const eventHandlers = self.eventHandlers;
-            //console.log(eventHandlers);
-            for (const eh of eventHandlers) {
-                eh.element.removeEventListener(eh.propKey, eh.fn);
-            }
+            };
+            proxy.addEventListener(propKey, fn);
+            if (proxy.eventHandlers === undefined)
+                proxy.eventHandlers = [];
+            proxy.eventHandlers.push({ propKey, element: proxy, fn });
+            nudge(proxy);
         }
-    },
-    superclass: XtalDecor,
-});
+    }
+    finale(proxy, target) {
+        const eventHandlers = proxy.eventHandlers;
+        for (const eh of eventHandlers) {
+            eh.element.removeEventListener(eh.propKey, eh.fn);
+        }
+    }
+}
 //very similar to be-observant.getElementToObserve
 function getRecipientElement(self, { toClosest, toNearestUpMatch, toUpShadow: to, toSelf }) {
     let recipientElement = self.recipientElement;
@@ -202,17 +187,6 @@ function doAction(self, recipientElement, { valFromEvent, vfe, valFromTarget, vf
         }
     }
 }
-//duplicated with be-observant
-function getHost(self) {
-    let host = self.getRootNode().host;
-    if (host === undefined) {
-        host = self.parentElement;
-        while (host && !host.localName.includes('-')) {
-            host = host.parentElement;
-        }
-    }
-    return host;
-}
 //copied from pass-up initially
 function doSet(recipientElement, prop, val, plusEq, toggleProp) {
     if (plusEq) {
@@ -244,31 +218,22 @@ function doInvoke(match, fn, val, withArgs, event) {
     }
     match[fn](...args);
 }
-/**
-* Decrement "disabled" counter, remove when reaches 0
-* @param prevSib
-*/
-function nudge(prevSib) {
-    const da = prevSib.getAttribute('disabled');
-    if (da !== null) {
-        if (da.length === 0 || da === "1") {
-            prevSib.removeAttribute('disabled');
-            prevSib.disabled = false;
+const tagName = 'be-noticed';
+define({
+    config: {
+        tagName,
+        propDefaults: {
+            upgrade: '*',
+            ifWantsToBe: 'noticed',
+            noParse: true,
+            forceVisible: true,
+            intro: 'intro',
+            finale: 'finale',
+            virtualProps: ['recipientElement', 'eventHandlers']
         }
-        else {
-            prevSib.setAttribute('disabled', (parseInt(da) - 1).toString());
-        }
+    },
+    complexPropDefaults: {
+        controller: BeNoticedController
     }
-}
-// /**
-// * get previous sibling -- identical to be-observant
-// */
-// function getPreviousSib(self: Element, observe: string) : Element | null{
-//     let prevSib: Element | null = self;
-//     while(prevSib && !prevSib.matches(observe)){
-//         const nextPrevSib: Element | null = prevSib.previousElementSibling || prevSib.parentElement;
-//         prevSib = nextPrevSib;
-//     }
-//     return prevSib;
-//  }
-document.head.appendChild(document.createElement('be-noticed'));
+});
+document.head.appendChild(document.createElement(tagName));

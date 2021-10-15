@@ -1,3 +1,5 @@
+import {BeDecoratedProps, EventHandler} from 'be-decorated/types';
+
 export interface INotify{
     valFromTarget?: string;
     vft?: string;
@@ -62,4 +64,17 @@ export interface INotify{
 
     propName?: string;
     
+}
+
+export interface BeNoticedVirtualProps{
+    eventHandlers: EventHandler[]
+}
+
+export interface BeNoticedProps extends BeNoticedVirtualProps{
+    proxy: Element & BeNoticedVirtualProps;
+}
+
+export interface BeNoticedActions{
+    intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps): void;
+    finale(proxy: Element & BeNoticedVirtualProps, target:Element): void;
 }

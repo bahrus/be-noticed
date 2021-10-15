@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "trans-render": "0.0.419",
+    "be-decorated": "0.0.7",
     "xtal-decor": "0.0.52",
     "on-to-me": "0.0.49"
   },

@@ -88,10 +88,10 @@ export class BeNoticedController implements BeNoticedActions {
                     doAction(proxy, recipientElement, notifyParam);
                 }
             }
-            proxy.addEventListener(propKey, fn);
+            target.addEventListener(propKey, fn);
             if(proxy.eventHandlers === undefined) proxy.eventHandlers = [];
             const on = propKey as keyof ElementEventMap;
-            proxy.eventHandlers.push({on, elementToObserve: proxy, fn});
+            proxy.eventHandlers.push({on, elementToObserve: target, fn});
             nudge(proxy);
             
         }

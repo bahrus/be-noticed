@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "trans-render": "0.0.419",
-    "be-decorated": "0.0.12",
+    "be-decorated": "0.0.13",
     "on-to-me": "0.0.49"
   },
   "devDependencies": {

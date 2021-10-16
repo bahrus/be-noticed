@@ -97,7 +97,7 @@ export class BeNoticedController implements BeNoticedActions {
         }
     }
 
-    finale(proxy: Element & BeNoticedVirtualProps, target:Element){
+    finale(proxy: Element & BeNoticedVirtualProps, target:Element, beDecorProps: BeDecoratedProps){
         const eventHandlers = proxy.eventHandlers;
         for(const eh of eventHandlers){
             eh.elementToObserve.removeEventListener(eh.on, eh.fn);

@@ -95,7 +95,7 @@ export class BeNoticedController {
             nudge(proxy);
         }
     }
-    finale(proxy, target) {
+    finale(proxy, target, beDecorProps) {
         const eventHandlers = proxy.eventHandlers;
         for (const eh of eventHandlers) {
             eh.elementToObserve.removeEventListener(eh.on, eh.fn);

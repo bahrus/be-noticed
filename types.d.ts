@@ -76,5 +76,5 @@ export interface BeNoticedProps extends BeNoticedVirtualProps{
 
 export interface BeNoticedActions{
     intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps): void;
-    finale(proxy: Element & BeNoticedVirtualProps, target:Element): void;
+    finale(proxy: Element & BeNoticedVirtualProps, target:Element, beDecorProps: BeDecoratedProps): void;
 }

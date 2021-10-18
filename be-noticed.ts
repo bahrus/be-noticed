@@ -222,12 +222,16 @@ function doInvoke(match: any, fn: string, val: any, withArgs: string[] | undefin
 
 const tagName = 'be-noticed';
 
+const ifWantsToBe = 'noticed';
+
+const upgrade = '*';
+
 define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, BeNoticedActions>, BeNoticedActions>({
     config:{
         tagName,
         propDefaults:{
-            upgrade: '*',
-            ifWantsToBe: 'noticed',
+            upgrade,
+            ifWantsToBe,
             noParse: true,
             forceVisible: true,
             intro: 'intro',
@@ -239,4 +243,15 @@ define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, BeNoticedActions>, BeNo
         controller: BeNoticedController
     }
 });
-document.head.appendChild(document.createElement(tagName));
+const beHive = document.querySelector('be-hive') as any;
+if(beHive !== null){
+    customElements.whenDefined(beHive.localName).then(() => {
+        beHive.register({
+            ifWantsToBe,
+            upgrade,
+            localName: tagName,
+        })
+    })
+}else{
+    document.head.appendChild(document.createElement(tagName));
+}

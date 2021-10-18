@@ -220,12 +220,14 @@ function doInvoke(match, fn, val, withArgs, event) {
     match[fn](...args);
 }
 const tagName = 'be-noticed';
+const ifWantsToBe = 'noticed';
+const upgrade = '*';
 define({
     config: {
         tagName,
         propDefaults: {
-            upgrade: '*',
-            ifWantsToBe: 'noticed',
+            upgrade,
+            ifWantsToBe,
             noParse: true,
             forceVisible: true,
             intro: 'intro',
@@ -237,4 +239,16 @@ define({
         controller: BeNoticedController
     }
 });
-document.head.appendChild(document.createElement(tagName));
+const beHive = document.querySelector('be-hive');
+if (beHive !== null) {
+    customElements.whenDefined(beHive.localName).then(() => {
+        beHive.register({
+            ifWantsToBe,
+            upgrade,
+            localName: tagName,
+        });
+    });
+}
+else {
+    document.head.appendChild(document.createElement(tagName));
+}

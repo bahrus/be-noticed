@@ -31,20 +31,21 @@
   "dependencies": {
     "trans-render": "0.0.422",
     "be-decorated": "0.0.19",
-    "on-to-me": "0.0.49"
+    "on-to-me": "0.0.49",
+    "be-hive": "0.0.6"
   },
   "devDependencies": {
     "xtal-test": "0.0.51",
     "@skypack/package-check": "0.2.2",
-    "@custom-elements-manifest/analyzer": "0.5.5",
-    "xtal-editor": "0.0.78",
-    "xtal-decor": "0.0.54"
+    "@custom-elements-manifest/analyzer": "0.5.6",
+    "xtal-editor": "0.0.82",
+    "xtal-decor": "0.0.55"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/be-noticed.git"
   },
-  "author": "",
+  "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bahrus/be-noticed/issues"

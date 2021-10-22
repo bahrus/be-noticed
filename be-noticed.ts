@@ -6,6 +6,7 @@ import {convert, getProp, splitExt} from 'on-to-me/prop-mixin.js';
 import {upSearch} from 'trans-render/lib/upSearch.js';
 import {upShadowSearch} from 'trans-render/lib/upShadowSearch.js';
 import {structuralClone} from 'trans-render/lib/structuralClone.js';
+import {register} from 'be-hive/register.js';
 
 export class BeNoticedController implements BeNoticedActions {
     intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
@@ -243,15 +244,4 @@ define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, BeNoticedActions>, BeNo
         controller: BeNoticedController
     }
 });
-const beHive = document.querySelector('be-hive') as any;
-if(beHive !== null){
-    customElements.whenDefined(beHive.localName).then(() => {
-        beHive.register({
-            ifWantsToBe,
-            upgrade,
-            localName: tagName,
-        })
-    })
-}else{
-    document.head.appendChild(document.createElement(tagName));
-}
+register(ifWantsToBe, upgrade, tagName);

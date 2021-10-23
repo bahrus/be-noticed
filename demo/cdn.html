@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id=testTarget></div>
+    <button data-msg="hello" be-noticed='{
+        "click": {"toUpShadow": "testTarget", "prop": "textContent", "vft": "dataset.msg"}
+    }'>Click</button>
+
+    <button onclick="removeButton()">Remove Button</button>
+    <script>
+        function removeButton(){
+            document.querySelector('[data-msg]').remove();
+        }
+    </script>
+    <script type=module>
+        import 'https://cdn.skypack.dev/be-noticed';
+    </script>
+</body>
+</html>

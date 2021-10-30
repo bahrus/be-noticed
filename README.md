@@ -7,56 +7,58 @@ be-noticed is a member of the [may-it-be](https://github.com/bahrus/may-it-be) f
 It strives to accomplish the same thing as the [pass-up](https://github.com/bahrus/pass-up) custom element, but in a possibly more performant way in many circumstances.  It uses attributes rather than elements to bind things together.  So instead of:
 
 ```html
-<d-fine templ-child 
-    as=my-counter
-    prop-defaults='{
-        "count": 30
-    }'
-    transform='{
-        "span": "count"
-    }'
->
-    <template>
-        <button part=down data-d=-1>-</button>
-        <pass-up on=click to-host prop=count plus-eq val=target.dataset.d parse-val-as=int></pass-up>
-        <span part=count></span>
-        <button part=up data-d=1>+</button>
-        <pass-up on=click to-host prop=count plus-eq val=target.dataset.d parse-val-as=int></pass-up>
-        <style></style>            
-    </template>
-</d-fine>
+
+<template be-definitive='{
+    "config": {
+        "tagName": "my-counter",
+        "propDefaults":{
+            "count": 30
+        },
+        "transform": {
+            "span": "count"
+        }
+    }
+}'>
+    <button part=down data-d=-1>-</button>
+    <pass-up on=click to-host prop=count plus-eq val=target.dataset.d parse-val-as=int></pass-up>
+    <span part=count></span>
+    <button part=up data-d=1>+</button>
+    <pass-up on=click to-host prop=count plus-eq val=target.dataset.d parse-val-as=int></pass-up>
+    <style></style>            
+</template>
+
 <my-counter></my-counter>
 ```
 
 we have:
 
 ```html
-<d-fine templ-child 
-    as=my-counter
-    prop-defaults='{
-        "count": 30
-    }'
-    transform='{
-        "span": "count"
-    }'
->
-    <template>
-        <button part=down data-d=-1 be-noticed='{
-            "click":{ "prop": "count", "plusEq": true, "vft": "dataset.d", "parseValAs": "int"}
-        }'>-</button>
-        <span part=count></span>
-        <button part=up data-d=1 be-noticed='{
-            "click":{ "prop": "count", "plusEq": true, "vft": "dataset.d", "parseValAs": "int"}
-        }'>+</button>
-        <style></style>            
-    </template>
-</d-fine>
+<template be-definitive='{
+    "config": {
+        "tagName": "my-counter",
+        "propDefaults":{
+            "count": 30
+        },
+        "transform": {
+            "span": "count"
+        }
+    }
+}'>
+    <button part=down data-d=-1 be-noticed='{
+        "click":{ "prop": "count", "plusEq": true, "vft": "dataset.d", "parseValAs": "int"}
+    }'>-</button>
+    <span part=count></span>
+    <button part=up data-d=1 be-noticed='{
+        "click":{ "prop": "count", "plusEq": true, "vft": "dataset.d", "parseValAs": "int"}
+    }'>+</button>
+    <style></style>            
+</template>
 <my-counter></my-counter>
 ```
 
 ## Responding to property changes
 
-By default, the keys of the expression, for example "click" is assumed to be an event handler to attach to the element.
+By default, the keys of the expression, for example "click", is assumed to be an event "type" name to attach to the element.
 
 However, in many scenarios, we want to respond to property changes that don't emit events.  Signify this by ending the key with ":onSet":
 

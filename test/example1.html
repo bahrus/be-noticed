@@ -13,21 +13,21 @@
             "imports": {
                 "xtal-element/": "../node_modules/xtal-element/",
                 "trans-render/": "../../node_modules/trans-render/",
-                "ib-id/": "../node_modules/ib-id/",
                 "on-to-me/": "../node_modules/on-to-me/",
                 "tran-sister/": "../node_modules/tran-sister/",
                 "xtal-side-nav/": "../node_modules/xtal-side-nav/",
                 "d-fine/": "../node_modules/d-fine/",
                 "xodus/": "../node_modules/xodus/",
-                "if-diff/": "../node_modules/if-diff/",
-                "lazy-mt/": "../node_modules/lazy-mt/",
-                "mut-obs/": "../node_modules/mut-obs/",
                 "@power-elements/": "../node_modules/@power-elements/",
                 "be-observant/": "../node_modules/be-observant/",
                 "be-noticed/": "../",
-                "xtal-decor/": "../node_modules/xtal-decor/",
                 "be-decorated/": "../node_modules/be-decorated/",
+                "be-definitive/": "../node_modules/be-definitive/",
                 "css-observe/": "../node_modules/css-observe/",
+                "be-transformative/": "../node_modules/be-transformative/",
+                "be-switched/": "../node_modules/be-switched/",
+                "be-repeated/": "../node_modules/be-repeated/",
+                "be-hive/": "../node_modules/be-hive/",
                 "xtal-editor/": "../node_modules/xtal-editor/"
             }
         }
@@ -45,6 +45,8 @@
                 $hell.cd('/xtal-editor-example1');
                 if($hell.$0.parsedObject.string === 'jethro tull'){
                     $hell.$0.setAttribute('mark', '');
+                }else{
+                    console.error('jethro tull not found in higher nodes.');
                 }
             }, 500);
 
@@ -57,5 +59,6 @@
         import 'xtal-editor/src/xtal-editor-example1.js';
         import '../node_modules/xtal-shell/$hell.js?module'
     </script>
+    <be-hive></be-hive>
 </body>
 </html>

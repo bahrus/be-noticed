@@ -39,7 +39,8 @@
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.5.6",
     "xtal-editor": "0.0.87",
-    "xtal-shell": "0.0.25"
+    "xtal-shell": "0.0.25",
+    "xtal-element": "0.0.452"
   },
   "repository": {
     "type": "git",

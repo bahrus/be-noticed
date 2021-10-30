@@ -1,6 +1,6 @@
 # be-noticed
 
-be-noticed is a member of the [p-et-alia](https://github.com/bahrus/p-et-alia) family of web components.
+be-noticed is a member of the [may-it-be](https://github.com/bahrus/may-it-be) family of web components.
 
 [![Actions Status](https://github.com/bahrus/be-noticed/workflows/CI/badge.svg)](https://github.com/bahrus/be-noticed/actions?query=workflow%3ACI)
 

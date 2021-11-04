@@ -124,9 +124,7 @@ function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, toUpSh
     }else if(toSelf){
         recipientElement = self;
     }else if(tocoho !== undefined){
-        const closest = tocoho === true ? '[data-is-hostish]' : tocoho as string;
-        recipientElement = self.closest(closest);
-        if(recipientElement === null) recipientElement = (<any>self.getRootNode()).host;
+        recipientElement = getHost(self, tocoho);
     }else{
         recipientElement = getHost(self); //not implemented
     }

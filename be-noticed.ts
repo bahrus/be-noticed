@@ -109,7 +109,7 @@ export class BeNoticedController implements BeNoticedActions {
 export interface BeNoticedController extends BeNoticedProps{}
 
 //very similar to be-observant.getElementToObserve
-function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, toUpShadow: to, toSelf}: INotify){
+function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, toUpShadow: to, toSelf, tocoho}: INotify){
     let recipientElement: Element | null = (<any>self).recipientElement;
     if(recipientElement) return recipientElement;
     if(to){
@@ -123,6 +123,10 @@ function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, toUpSh
         recipientElement = upSearch(self, toNearestUpMatch) as Element;
     }else if(toSelf){
         recipientElement = self;
+    }else if(tocoho !== undefined){
+        const closest = tocoho === true ? '[data-is-hostish]' : tocoho as string;
+        recipientElement = self.closest(closest);
+        if(recipientElement === null) recipientElement = (<any>self.getRootNode()).host;
     }else{
         recipientElement = getHost(self); //not implemented
     }

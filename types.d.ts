@@ -31,6 +31,8 @@ export interface INotify{
 
     toClosest?: string;
 
+    tocoho?: boolean | string; //to closest or host
+
     /**
      * Name of property to set on matching (upstream) element.
      * @attr

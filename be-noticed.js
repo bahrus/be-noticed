@@ -104,7 +104,7 @@ export class BeNoticedController {
     }
 }
 //very similar to be-observant.getElementToObserve
-function getRecipientElement(self, { toClosest, toNearestUpMatch, toUpShadow: to, toSelf }) {
+function getRecipientElement(self, { toClosest, toNearestUpMatch, toUpShadow: to, toSelf, tocoho }) {
     let recipientElement = self.recipientElement;
     if (recipientElement)
         return recipientElement;
@@ -122,6 +122,12 @@ function getRecipientElement(self, { toClosest, toNearestUpMatch, toUpShadow: to
     }
     else if (toSelf) {
         recipientElement = self;
+    }
+    else if (tocoho !== undefined) {
+        const closest = tocoho === true ? '[data-is-hostish]' : tocoho;
+        recipientElement = self.closest(closest);
+        if (recipientElement === null)
+            recipientElement = self.getRootNode().host;
     }
     else {
         recipientElement = getHost(self); //not implemented

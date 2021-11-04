@@ -63,7 +63,7 @@ export class BeNoticedController implements BeNoticedActions {
                         const pram = params[propName + ":onSet"];
                         const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as INotify[];
                         for(const notifyParamPre of notifyParams){
-                            const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre} : notifyParamPre;
+                            const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre, tocoho: true} : notifyParamPre;
                             const recipientElement = getRecipientElement(proxy, notifyParam);
                             if(recipientElement === null){
                                 console.warn({msg:'404', notifyParam});
@@ -80,7 +80,7 @@ export class BeNoticedController implements BeNoticedActions {
                 const pram = params[e.type];
                 const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as INotify[];
                 for(const notifyParamPre of notifyParams){
-                    const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre} : notifyParamPre;
+                    const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre, tocoho: true} : notifyParamPre;
                     const recipientElement = getRecipientElement(proxy, notifyParam);
                     if(recipientElement === null){
                         console.warn({msg:'404', notifyParam});

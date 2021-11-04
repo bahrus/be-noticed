@@ -123,10 +123,8 @@ function getRecipientElement(self: Element, {toClosest, toNearestUpMatch, toUpSh
         recipientElement = upSearch(self, toNearestUpMatch) as Element;
     }else if(toSelf){
         recipientElement = self;
-    }else if(tocoho !== undefined){
-        recipientElement = getHost(self, tocoho);
     }else{
-        recipientElement = getHost(self); //not implemented
+        recipientElement = getHost(self, tocoho); 
     }
     (<any>self).recipientElement = recipientElement;
     return recipientElement;

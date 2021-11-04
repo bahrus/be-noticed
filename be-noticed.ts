@@ -27,7 +27,7 @@ export class BeNoticedController implements BeNoticedActions {
             const propName = isPropSet ?  propKey.substr(0, propKey.length - 6) : undefined;
             const notifyParams = Array.isArray(pram) ? pram as INotify[] : [pram] as (string | INotify)[];
             for(const notifyParamPre of notifyParams){
-                const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre} : notifyParamPre;
+                const notifyParam: INotify = (typeof notifyParamPre === 'string') ? {fn: notifyParamPre, tocoho: true} : notifyParamPre;
                 notifyParam.propName = propName;
                 if(notifyParam.doInit){
                     const recipientElement = getRecipientElement(proxy, notifyParam);

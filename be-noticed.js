@@ -26,7 +26,7 @@ export class BeNoticedController {
             const propName = isPropSet ? propKey.substr(0, propKey.length - 6) : undefined;
             const notifyParams = Array.isArray(pram) ? pram : [pram];
             for (const notifyParamPre of notifyParams) {
-                const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre } : notifyParamPre;
+                const notifyParam = (typeof notifyParamPre === 'string') ? { fn: notifyParamPre, tocoho: true } : notifyParamPre;
                 notifyParam.propName = propName;
                 if (notifyParam.doInit) {
                     const recipientElement = getRecipientElement(proxy, notifyParam);

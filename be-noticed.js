@@ -230,7 +230,6 @@ define({
             upgrade,
             ifWantsToBe,
             noParse: true,
-            forceVisible: true,
             intro: 'intro',
             finale: 'finale',
             virtualProps: ['eventHandlers']

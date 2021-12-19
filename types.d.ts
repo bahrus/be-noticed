@@ -1,9 +1,21 @@
 import {BeDecoratedProps, EventHandler} from 'be-decorated/types';
 
 export interface INotify{
+    /**
+     * path to get value from target
+     */
     valFromTarget?: string;
+    /**
+     * path to get value from target
+     */
     vft?: string;
+    /**
+     * path to get value from event
+     */
     valFromEvent?: string;
+    /**
+     * path to get value from event
+     */
     vfe?: string;
     /**
      * Pass property or invoke fn onto custom or built-in element hosting the contents of p-u element.
@@ -31,6 +43,9 @@ export interface INotify{
 
     toClosest?: string;
 
+    /**
+     * to closest or host ("itemscope" attribute or shadow DOM boundary)
+     */
     tocoho?: boolean | string; //to closest or host
 
     /**
@@ -68,7 +83,7 @@ export interface INotify{
     
 }
 
-export type INotifyMap = {[key in keyof INotify]: INotify[key]};
+export type INotifyMap = {[key: string]: INotify};
 
 export interface BeNoticedVirtualProps{
     eventHandlers: EventHandler[]

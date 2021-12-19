@@ -68,6 +68,8 @@ export interface INotify{
     
 }
 
+export type INotifyMap = {[key in keyof INotify]: INotify[key]};
+
 export interface BeNoticedVirtualProps{
     eventHandlers: EventHandler[]
 }

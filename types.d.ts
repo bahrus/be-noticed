@@ -1,14 +1,14 @@
 import {BeDecoratedProps, EventHandler} from 'be-decorated/types';
 
-export interface INotify{
+export interface INotify<TSelf = any, TProps = any, TActions = TProps>{
     /**
      * path to get value from target
      */
-    valFromTarget?: string;
+    valFromTarget?: keyof TSelf;
     /**
      * path to get value from target
      */
-    vft?: string;
+    vft?: keyof TSelf | `${keyof TSelf & string}.${string}`;
     /**
      * path to get value from event
      */
@@ -52,12 +52,12 @@ export interface INotify{
      * Name of property to set on matching (upstream) element.
      * @attr
      */
-    prop?: string;
+    prop?: keyof TProps & string;
 
     /**
      * Name of method or property arrow function to invoke on matching (upstream) element.
      */
-    fn?: string;
+    fn?: keyof TActions & string;
 
     withArgs?: ('self' | 'val' | 'event')[];
 
@@ -83,7 +83,7 @@ export interface INotify{
     
 }
 
-export type INotifyMap = {[key: string]: INotify};
+export type INotifyMap<TSelf, TProps, TActions> = {[key: string]: INotify<TSelf, TProps, TActions>};
 
 export interface BeNoticedVirtualProps{
     eventHandlers: EventHandler[]

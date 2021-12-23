@@ -83,11 +83,14 @@ export interface INotify<TSelf = any, TProps = any, TActions = TProps>{
     
 }
 
-export type INotifyMap<TSelf, TProps, TActions> = {[key: string]: INotify<TSelf, TProps, TActions>};
+export type INotifyMap<TSelf = any, TProps = any, TActions = TProps> = {[key in keyof TSelf]: INotify<TSelf, TProps, TActions>};
+
 
 export interface BeNoticedVirtualProps{
-    eventHandlers: EventHandler[]
+    eventHandlers: EventHandler[];
 }
+
+
 
 export interface BeNoticedProps extends BeNoticedVirtualProps{
     proxy: Element & BeNoticedVirtualProps;

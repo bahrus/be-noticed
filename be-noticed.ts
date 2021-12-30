@@ -138,7 +138,7 @@ function doAction(self: Element, recipientElement: Element, {
     const valFT = vft || valFromTarget;
     if(event === undefined && valFE !== undefined) return;
     const valPath = (event !== undefined && valFE ? valFE : valFT) || (propName || 'value');
-    const split = splitExt(valPath);
+    const split = splitExt(valPath as string);
     let src: any = valFE !== undefined ? ( event ? event : self) : self; 
     let val = getProp(src, split, self);
     if(val === undefined) return;
@@ -234,6 +234,7 @@ define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, BeNoticedActions>, BeNo
             upgrade,
             ifWantsToBe,
             noParse: true,
+            waitForUpgrade: true,
             intro: 'intro',
             finale: 'finale',
             virtualProps: ['eventHandlers']

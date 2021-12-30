@@ -9,7 +9,7 @@ import {structuralClone} from 'trans-render/lib/structuralClone.js';
 import {register} from 'be-hive/register.js';
 
 export class BeNoticedController implements BeNoticedActions {
-    intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
+    async intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
         let params: any = undefined;
         const attr = proxy.getAttribute('is-' + beDecorProps.ifWantsToBe!)!;
         try{
@@ -39,6 +39,9 @@ export class BeNoticedController implements BeNoticedActions {
                 }
             }
             if(propName !== undefined){
+                if(target.localName.includes('-')){
+                    await customElements.whenDefined(target.localName);
+                }
                 let proto = target;
                 let prop = Object.getOwnPropertyDescriptor(proto, propName);
                 while (proto && !prop) {

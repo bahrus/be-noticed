@@ -7,7 +7,7 @@ import { upShadowSearch } from 'trans-render/lib/upShadowSearch.js';
 import { structuralClone } from 'trans-render/lib/structuralClone.js';
 import { register } from 'be-hive/register.js';
 export class BeNoticedController {
-    intro(proxy, target, beDecorProps) {
+    async intro(proxy, target, beDecorProps) {
         let params = undefined;
         const attr = proxy.getAttribute('is-' + beDecorProps.ifWantsToBe);
         try {
@@ -38,6 +38,9 @@ export class BeNoticedController {
                 }
             }
             if (propName !== undefined) {
+                if (target.localName.includes('-')) {
+                    await customElements.whenDefined(target.localName);
+                }
                 let proto = target;
                 let prop = Object.getOwnPropertyDescriptor(proto, propName);
                 while (proto && !prop) {

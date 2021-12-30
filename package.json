@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "trans-render": "0.0.442",
-    "be-decorated": "0.0.57",
+    "be-decorated": "0.0.59",
     "on-to-me": "0.0.49",
     "be-hive": "0.0.16"
   },

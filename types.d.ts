@@ -65,7 +65,7 @@ export interface INotify<TSelf = any, TProps = any, TActions = TProps>{
 
     clone?: boolean;
 
-    parseValAs?: string;
+    parseValAs?: 'int' | 'float' | 'bool' | 'date' | 'truthy' | 'falsy' | undefined | 'string' | 'object';
 
     plusEq?: boolean;
 

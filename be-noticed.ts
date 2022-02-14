@@ -5,8 +5,8 @@ import {getHost} from 'trans-render/lib/getHost.js';
 import {convert, getProp, splitExt} from 'on-to-me/prop-mixin.js';
 import {upSearch} from 'trans-render/lib/upSearch.js';
 import {upShadowSearch} from 'trans-render/lib/upShadowSearch.js';
-import {structuralClone} from 'trans-render/lib/structuralClone.js';
 import {register} from 'be-hive/register.js';
+declare function structuredClone(val: any): any;
 
 export class BeNoticedController implements BeNoticedActions {
     async intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
@@ -145,7 +145,7 @@ function doAction(self: Element, recipientElement: Element, {
     let src: any = valFE !== undefined ? ( event ? event : self) : self; 
     let val = getProp(src, split, self);
     if(val === undefined) return;
-    if(clone) val = structuralClone(val);
+    if(clone) val = structuredClone(val);
     if(parseValAs !== undefined){
         val = convert(val, parseValAs);
     }

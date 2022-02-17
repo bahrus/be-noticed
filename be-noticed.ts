@@ -1,12 +1,6 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {INotify, BeNoticedActions, BeNoticedProps, BeNoticedVirtualProps} from './types';
-// import {nudge} from 'trans-render/lib/nudge.js';
-// import {getHost} from 'trans-render/lib/getHost.js';
-// import {convert, getProp, splitExt} from 'on-to-me/prop-mixin.js';
-// import {upSearch} from 'trans-render/lib/upSearch.js';
-// import {upShadowSearch} from 'trans-render/lib/upShadowSearch.js';
 import {register} from 'be-hive/register.js';
-// declare function structuredClone(val: any): any;
 
 export class BeNoticedController implements BeNoticedActions {
     async intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){

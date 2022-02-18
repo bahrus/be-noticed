@@ -17,10 +17,14 @@ export class BeNoticedController {
         const { notifyHookUp } = await import('trans-render/lib/notifyHookup.js');
         for (const propKey in params) {
             const pram = params[propKey];
-            await notifyHookUp(target, propKey, pram);
+            const notifyParam = (typeof pram === 'string') ? { fn: pram, tocoho: true } : pram;
+            await notifyHookUp(target, propKey, notifyParam);
         }
+        const { nudge } = await import('trans-render/lib/nudge.js');
+        nudge(target);
     }
     finale(proxy, target, beDecorProps) {
+        //TODO?
     }
 }
 const tagName = 'be-noticed';

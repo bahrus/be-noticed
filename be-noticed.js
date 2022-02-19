@@ -20,8 +20,6 @@ export class BeNoticedController {
             const notifyParam = (typeof pram === 'string') ? { fn: pram, tocoho: true } : pram;
             await notifyHookUp(target, propKey, notifyParam);
         }
-        const { nudge } = await import('trans-render/lib/nudge.js');
-        nudge(target);
     }
     finale(proxy, target, beDecorProps) {
         //TODO?

@@ -18,7 +18,7 @@ export class BeNoticedController implements BeNoticedActions {
         const {notifyHookUp} =  await import('trans-render/lib/notifyHookup.js');
         for(const propKey in params){
             const pram = params[propKey];
-            const notifyParam: INotify = (typeof pram === 'string') ? {fn: pram, tocoho: true} : pram;
+            const notifyParam: INotify = (typeof pram === 'string') ? {fn: pram, tocoho: true, nudge: true} : pram;
             await notifyHookUp(target, propKey, notifyParam);
         }
     }

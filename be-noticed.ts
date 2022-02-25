@@ -1,5 +1,6 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {INotify, BeNoticedActions, BeNoticedProps, BeNoticedVirtualProps} from './types';
+import {INotify} from 'trans-render/lib/types';
+import {BeNoticedActions, BeNoticedProps, BeNoticedVirtualProps} from './types';
 import {register} from 'be-hive/register.js';
 
 export class BeNoticedController implements BeNoticedActions {

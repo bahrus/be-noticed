@@ -1,6 +1,7 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 export class BeNoticedController {
+    #eventHandlers = {};
     async intro(proxy, target, beDecorProps) {
         let params = undefined;
         const attr = proxy.getAttribute('is-' + beDecorProps.ifWantsToBe);
@@ -18,11 +19,19 @@ export class BeNoticedController {
         for (const propKey in params) {
             const pram = params[propKey];
             const notifyParam = (typeof pram === 'string') ? { fn: pram, tocoho: true, nudge: true } : pram;
-            await notifyHookUp(target, propKey, notifyParam);
+            const handler = await notifyHookUp(target, propKey, notifyParam);
+            if (handler !== undefined) {
+                this.#eventHandlers[propKey] = handler;
+            }
         }
     }
-    finale(proxy, target, beDecorProps) {
-        //TODO?
+    async finale(proxy, target, beDecorProps) {
+        //TODO: clean up event handlers.
+        const { unsubscribe } = await import('trans-render/lib/subscribe.js');
+        unsubscribe(target);
+        for (const key in this.#eventHandlers) {
+            target.removeEventListener(key, this.#eventHandlers[key]);
+        }
     }
 }
 const tagName = 'be-noticed';

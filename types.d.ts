@@ -5,7 +5,7 @@ export type INotifyMap<TSelf = any, TProps = any, TActions = TProps> = {[key in 
 
 
 export interface BeNoticedVirtualProps{
-    eventHandlers: EventHandler[];
+    //eventHandlers: EventHandler[];
 }
 
 

@@ -54,7 +54,7 @@ define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, BeNoticedActions>, BeNo
             noParse: true,
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['eventHandlers']
+            virtualProps: []
         }
     },
     complexPropDefaults: {

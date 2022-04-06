@@ -17,11 +17,11 @@ export class BeNoticedController implements BeNoticedActions {
             });
             return;
         }
-        const {notifyHookUp} =  await import('trans-render/lib/notifyHookup.js');
+        const {notifyHookup} =  await import('trans-render/lib/notifyHookup.js');
         for(const propKey in params){
             const pram = params[propKey];
             const notifyParam: INotify = (typeof pram === 'string') ? {fn: pram, tocoho: true, nudge: true} : pram;
-            const handler = await notifyHookUp(target, propKey, notifyParam);
+            const handler = await notifyHookup(target, propKey, notifyParam);
             if(handler !== undefined){ this.#eventHandlers[propKey] = handler; }
         }
     }

@@ -1,20 +1,10 @@
 import { define } from 'be-decorated/be-decorated.js';
+import { doParse } from 'be-decorated/doParse.js';
 import { register } from 'be-hive/register.js';
 export class BeNoticedController {
     #eventHandlers = {};
     async intro(proxy, target, beDecorProps) {
-        let params = undefined;
-        const attr = proxy.getAttribute('is-' + beDecorProps.ifWantsToBe);
-        try {
-            params = JSON.parse(attr);
-        }
-        catch (e) {
-            console.error({
-                e,
-                attr
-            });
-            return;
-        }
+        const params = doParse(target, beDecorProps);
         const { notifyHookup } = await import('trans-render/lib/notifyHookup.js');
         for (const propKey in params) {
             const pram = params[propKey];

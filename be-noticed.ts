@@ -1,4 +1,5 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
+import {doParse} from 'be-decorated/doParse.js';
 import {INotify} from 'trans-render/lib/types';
 import {BeNoticedActions, BeNoticedProps, BeNoticedVirtualProps} from './types';
 import {register} from 'be-hive/register.js';
@@ -6,17 +7,7 @@ import {register} from 'be-hive/register.js';
 export class BeNoticedController implements BeNoticedActions {
     #eventHandlers: {[key: string]: ((e: Event) => void)} = {};
     async intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
-        let params: any = undefined;
-        const attr = proxy.getAttribute('is-' + beDecorProps.ifWantsToBe!)!;
-        try{
-            params = JSON.parse(attr);
-        }catch(e){
-            console.error({
-                e,
-                attr
-            });
-            return;
-        }
+        const params = doParse(target, beDecorProps); 
         const {notifyHookup} =  await import('trans-render/lib/notifyHookup.js');
         for(const propKey in params){
             const pram = params[propKey];

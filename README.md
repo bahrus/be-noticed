@@ -2,7 +2,7 @@
 
 be-noticed is a member of the [may-it-be](https://github.com/bahrus/may-it-be) family of web components.
 
-[![Actions Status](https://github.com/bahrus/be-noticed/workflows/CI/badge.svg)](https://github.com/bahrus/be-noticed/actions?query=workflow%3ACI)
+[![Playwright Tests](https://github.com/bahrus/be-noticed/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-noticed/actions/workflows/CI.yml)
 
 It strives to accomplish the same thing as the [pass-up](https://github.com/bahrus/pass-up) custom element, but in a possibly more performant way in many circumstances.  It uses attributes rather than elements to bind things together.  So instead of:
 

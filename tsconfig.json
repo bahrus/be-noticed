@@ -9,7 +9,9 @@
 		"strict": true,
 	},
 	"files":[
-		"be-noticed.ts"
+		"be-noticed.ts",
+		//"playwright.config.ts",
+		//"tests/test1.spec.mts"
 	],
 	"exclude":[
 		"build",

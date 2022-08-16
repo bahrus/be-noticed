@@ -28,12 +28,12 @@
     "doc": "custom-elements-manifest analyze"
   },
   "dependencies": {
-    "trans-render": "0.0.557",
-    "be-decorated": "0.0.128",
-    "be-hive": "0.0.50"
+    "trans-render": "0.0.562",
+    "be-decorated": "0.0.131",
+    "be-hive": "0.0.52"
   },
   "devDependencies": {
-    "@playwright/test": "1.24.2",
+    "@playwright/test": "1.25.0",
     "may-it-serve": "0.0.2",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.5.7",

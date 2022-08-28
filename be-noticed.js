@@ -1,6 +1,6 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
-export class BeNoticedController {
+export class BeNoticedController extends EventTarget {
     #eventHandlers = {};
     async intro(proxy, target, beDecorProps) {
         let params = undefined;
@@ -24,6 +24,7 @@ export class BeNoticedController {
                 this.#eventHandlers[propKey] = handler;
             }
         }
+        proxy.resolved = true;
     }
     async finale(proxy, target, beDecorProps) {
         //TODO: clean up event handlers.

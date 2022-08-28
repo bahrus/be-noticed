@@ -3,7 +3,7 @@ import {INotify} from 'trans-render/lib/types';
 import {BeNoticedActions, BeNoticedProps, BeNoticedVirtualProps} from './types';
 import {register} from 'be-hive/register.js';
 
-export class BeNoticedController implements BeNoticedActions {
+export class BeNoticedController extends EventTarget implements BeNoticedActions {
     #eventHandlers: {[key: string]: ((e: Event) => void)} = {};
     async intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
         let params: any = undefined;
@@ -24,6 +24,7 @@ export class BeNoticedController implements BeNoticedActions {
             const handler = await notifyHookup(target, propKey, notifyParam);
             if(handler !== undefined){ this.#eventHandlers[propKey] = handler; }
         }
+        proxy.resolved = true;
     }
 
     async finale(proxy: Element & BeNoticedVirtualProps, target:Element, beDecorProps: BeDecoratedProps){

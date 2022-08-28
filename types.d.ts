@@ -1,10 +1,10 @@
-import {BeDecoratedProps, EventHandler} from 'be-decorated/types';
+import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 import {INotify} from 'trans-render/lib/types';
 
 export type INotifyMap<TSelf = any, TProps = any, TActions = TProps> = {[key in keyof TSelf]: INotify<TSelf, TProps, TActions>};
 
 
-export interface BeNoticedVirtualProps{
+export interface BeNoticedVirtualProps extends MinimalProxy{
     //eventHandlers: EventHandler[];
 }
 

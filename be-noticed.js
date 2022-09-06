@@ -47,7 +47,7 @@ define({
             noParse: true,
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['eventHandlers']
+            virtualProps: []
         }
     },
     complexPropDefaults: {

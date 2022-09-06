@@ -1,11 +1,11 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {INotify} from 'trans-render/lib/types';
-import {BeNoticedActions, BeNoticedProps, BeNoticedVirtualProps} from './types';
+import {Actions, BeNoticedProps, VirtualProps} from './types';
 import {register} from 'be-hive/register.js';
 
-export class BeNoticedController extends EventTarget implements BeNoticedActions {
+export class BeNoticedController extends EventTarget implements Actions {
     #eventHandlers: {[key: string]: ((e: Event) => void)} = {};
-    async intro(proxy: Element & BeNoticedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
+    async intro(proxy: Element & VirtualProps, target: Element, beDecorProps: BeDecoratedProps){
         let params: any = undefined;
         const attr = proxy.getAttribute('is-' + beDecorProps.ifWantsToBe!)!;
         try{
@@ -27,7 +27,7 @@ export class BeNoticedController extends EventTarget implements BeNoticedActions
         proxy.resolved = true;
     }
 
-    async finale(proxy: Element & BeNoticedVirtualProps, target:Element, beDecorProps: BeDecoratedProps){
+    async finale(proxy: Element & VirtualProps, target:Element, beDecorProps: BeDecoratedProps){
         //TODO: clean up event handlers.
         const {unsubscribe} = await import('trans-render/lib/subscribe.js');
         unsubscribe(target);
@@ -46,7 +46,7 @@ const ifWantsToBe = 'noticed';
 
 const upgrade = '*';
 
-define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, BeNoticedActions>, BeNoticedActions>({
+define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, Actions>, Actions>({
     config:{
         tagName,
         propDefaults:{
@@ -55,7 +55,7 @@ define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, BeNoticedActions>, BeNo
             noParse: true,
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['eventHandlers']
+            virtualProps: []
         }
     },
     complexPropDefaults: {

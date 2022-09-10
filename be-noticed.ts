@@ -3,8 +3,8 @@ import {INotify} from 'trans-render/lib/types';
 import {Actions, BeNoticedProps, VirtualProps} from './types';
 import {register} from 'be-hive/register.js';
 
-export class BeNoticedController extends EventTarget implements Actions {
-    #eventHandlers: {[key: string]: ((e: Event) => void)} = {};
+export class BeNoticed extends EventTarget implements Actions {
+    #controllers: AbortController[] | undefined;
     async intro(proxy: Element & VirtualProps, target: Element, beDecorProps: BeDecoratedProps){
         let params: any = undefined;
         const attr = proxy.getAttribute('is-' + beDecorProps.ifWantsToBe!)!;
@@ -18,26 +18,29 @@ export class BeNoticedController extends EventTarget implements Actions {
             return;
         }
         const {notifyHookup} =  await import('trans-render/lib/notifyHookup.js');
+        this.#controllers = [];
         for(const propKey in params){
             const pram = params[propKey];
             const notifyParam: INotify = (typeof pram === 'string') ? {fn: pram, tocoho: true, nudge: true} : pram;
             const handler = await notifyHookup(target, propKey, notifyParam);
-            if(handler !== undefined){ this.#eventHandlers[propKey] = handler; }
+            this.#controllers.push(handler.controller);
         }
         proxy.resolved = true;
     }
 
-    async finale(proxy: Element & VirtualProps, target:Element, beDecorProps: BeDecoratedProps){
-        //TODO: clean up event handlers.
-        const {unsubscribe} = await import('trans-render/lib/subscribe.js');
-        unsubscribe(target);
-        for(const key in this.#eventHandlers){
-            target.removeEventListener(key, this.#eventHandlers[key]);
+    disconnect(){
+        if(this.#controllers === undefined) return;
+        for(const c of this.#controllers){
+            c.abort();
         }
+    }
+
+    async finale(proxy: Element & VirtualProps, target:Element, beDecorProps: BeDecoratedProps){
+       this.disconnect();
     }
 }
 
-export interface BeNoticedController extends BeNoticedProps{}
+export interface BeNoticed extends BeNoticedProps{}
 
 
 const tagName = 'be-noticed';
@@ -59,7 +62,7 @@ define<BeNoticedProps & BeDecoratedProps<BeNoticedProps, Actions>, Actions>({
         }
     },
     complexPropDefaults: {
-        controller: BeNoticedController
+        controller: BeNoticed
     }
 });
 register(ifWantsToBe, upgrade, tagName);

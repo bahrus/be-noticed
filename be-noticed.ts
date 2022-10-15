@@ -1,4 +1,4 @@
-import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
+import {define, BeDecoratedProps} from 'be-decorated/DE.js';
 import {INotify} from 'trans-render/lib/types';
 import {Actions, BeNoticedProps, VirtualProps} from './types';
 import {register} from 'be-hive/register.js';

@@ -78,6 +78,14 @@ This will set the host element's "newData" property to my-fetch-component's fetc
 
 ## Shortcuts
 
+The most drastic shortcut is shown below [TODO]:
+
+```html
+<button be-noticed="doAction">
+```
+
+... means "call the host's "doAction" method on "click" event.  If be-noticed adorns an input element, handle event "input".  
+
 By default, the "recipient" of the message will be the host custom element containing the decorated element.
 
 However, alternative recipients can be specified:
